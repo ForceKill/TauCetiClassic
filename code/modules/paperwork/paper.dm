@@ -160,7 +160,6 @@
 	return
 
 /obj/item/weapon/paper/attack(mob/living/carbon/M, mob/living/carbon/user, def_zone)
-	user.SetNextMove(CLICK_CD_MELEE)
 	if(def_zone == O_EYES)
 		user.visible_message("<span class='notice'>You show the paper to [M]. </span>", \
 			"<span class='notice'> [user] holds up a paper and shows it to [M]. </span>")
@@ -173,7 +172,7 @@
 				to_chat(user, "<span class='notice'>You wipe off the lipstick with [src].</span>")
 				H.lip_style = null
 				H.update_body()
-			else if(!user.is_busy())
+			else
 				user.visible_message("<span class='warning'>[user] begins to wipe [H]'s lipstick off with \the [src].</span>", \
 								 	 "<span class='notice'>You begin to wipe off [H]'s lipstick.</span>")
 				if(do_after(user, 10, target = H))	//user needs to keep their active hand, H does not.
@@ -282,6 +281,32 @@
 	t = replacetext(t, "\[/large\]", "</font>")
 	t = replacetext(t, "\[field\]", "<span class=\"paper_field\"></span>")
 
+	// tables
+	t = replacetext(t, "\[table\]", "<table border=3px cellpadding=5px bordercolor=\"black\">");
+	t = replacetext(t, "\[/table\]", "</table>");
+	t = replacetext(t, "\[tr\]", "<tr>");
+	t = replacetext(t, "\[/tr\]", "</tr>");
+	t = replacetext(t, "\[td\]", "<td>");
+	t = replacetext(t, "\[/td\]", "</td>");
+	t = replacetext(t, "\[th\]", "<th>");
+	t = replacetext(t, "\[/th\]", "</th>");
+
+	// standart head
+	t = replacetext(t, "\[h\]", "<h2 style=\"font-family: Arial; text-align:center;\">");
+	t = replacetext(t, "\[/h\]", "</h2>");
+
+	// bordered head;
+	t = replacetext(t, "\[bh\]", "<h2 style=\"border-width: 4px; border-style: solid; font-family: Arial; padding: 10px; text-align:center;\">");
+	t = replacetext(t, "\[/bh\]", "</h2>")
+
+	// blockquote
+	t = replacetext(t, "\[quote\]", "<blockquote style=\"line-height:normal; margin-bottom:10px; font-style:italic; text-align:right;\">");
+	t = replacetext(t, "\[/quote\]", "</blockquote>");
+
+	// div
+	t = replacetext(t, "\[block\]", "<div style=\"border-width: 4px; border-style: dashed;\">");
+	t = replacetext(t, "\[/block\]", "</div>");
+
 	if(!iscrayon)
 		t = replacetext(t, "\[*\]", "<li>")
 		t = replacetext(t, "\[hr\]", "<HR>")
@@ -345,7 +370,7 @@
 	if(!is_type_in_list(src, burnable))
 		return
 
-	if(P.lit && !user.restrained() && !user.is_busy())
+	if(P.lit && !user.restrained())
 		var/class = "<span class='red'>"
 		if(istype(P, /obj/item/weapon/lighter/zippo))
 			class = "<span class='rose'>"
@@ -426,7 +451,6 @@
 
 /obj/item/weapon/paper/attackby(obj/item/weapon/P, mob/user)
 	..()
-	user.SetNextMove(CLICK_CD_INTERACT)
 	var/clown = 0
 	if(user.mind && (user.mind.assigned_role == "Clown"))
 		clown = 1
